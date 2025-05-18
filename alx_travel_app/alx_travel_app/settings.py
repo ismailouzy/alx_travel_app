@@ -11,6 +11,8 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from pathlib import Path
+import environ
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -19,13 +21,17 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
+env = environ.Env()
+environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
+
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-lmqzy8-y1%r^8*!j65rl5uor11f+@c7ifp9opy1(j7gl^+f-5v'
+SECRET_KEY = 'django-insecure-47)d^!cyte4vcg5zsemkr+w&y(j$u)uo^%9(eg(z-eng)*)(-a'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
 ALLOWED_HOSTS = []
+CORS_ALLOW_ALL_ORIGINS = True
 
 
 # Application definition
@@ -37,6 +43,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
+    'corsheaders',
+    'drf_yasg',
+    'listings',
 ]
 
 MIDDLEWARE = [
@@ -47,6 +57,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 ]
 
 ROOT_URLCONF = 'alx_travel_app.urls'
@@ -74,8 +85,12 @@ WSGI_APPLICATION = 'alx_travel_app.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': env('DB_NAME'),
+        'USER': env('DB_USER'),
+        'PASSWORD': env('DB_PASSWORD'),
+        'HOST': env('DB_HOST', default='localhost'),
+        'PORT': env('DB_PORT', default='3306'),
     }
 }
 
